@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
+import RegisterUserModal from "@/components/RegisterUser/RegisterUserModal";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/lib/database";
+import { ValidFontTypes } from "@/services/FontService/FontService";
+import { GLOBAL_CONFIGURATION_INDEX } from "@/constants/dbConstants";
 
 function App() {
-  const [count, setCount] = useState(0)
+  useLiveQuery(async () => {
+    const fontSettingId = (
+      await db.settings.where("key").equals("font").first()
+    )?.id as number;
+    const fontValue =
+      (
+        await db.userSettings
+          .where("[workspaceId+settingId]")
+          .equals([GLOBAL_CONFIGURATION_INDEX, fontSettingId])
+          .first()
+      )?.value || ValidFontTypes.chilanka;
+
+    Object.values(ValidFontTypes).forEach((fontClassName) =>
+      document.body.classList.remove(fontClassName)
+    );
+    document.body.classList.add(fontValue);
+  });
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="h-screen flex flex-col container mx-auto">
+      <RegisterUserModal />
+      <Header />
+      <main className="flex flex-1 overflow-y-auto flex-col"></main>
+      <Footer />
+    </div>
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,1 @@
+export const GLOBAL_CONFIGURATION_INDEX = -1;
