@@ -10,9 +10,9 @@ const AddColumn = ({ onAddColumn }: AddColumnProps) => {
     >
       <div className="text-center">
         <div className="text-4xl text-gray-400 mb-2">+</div>
-        <p className="text-gray-600 font-medium">Agregar Columna</p>
+        <p className="text-gray-600 font-medium">Add Column</p>
         <p className="text-gray-400 text-sm mt-1">
-          Click para crear nueva columna
+          Click here to add a new column
         </p>
       </div>
     </div>
