@@ -1,35 +1,30 @@
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import RegisterUserModal from "@/components/RegisterUser/RegisterUserModal";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/lib/database";
-import { ValidFontTypes } from "@/services/FontService/FontService";
-import { GLOBAL_CONFIGURATION_INDEX } from "@/constants/dbConstants";
+import {
+  FontService,
+  ValidFontTypes,
+} from "@/services/FontService/FontService";
+import Dashboard from "@/components/DashBoard/DashBoard";
+import { useEffect } from "react";
 
 function App() {
-  useLiveQuery(async () => {
-    const fontSettingId = (
-      await db.settings.where("key").equals("font").first()
-    )?.id as number;
-    const fontValue =
-      (
-        await db.userSettings
-          .where("[workspaceId+settingId]")
-          .equals([GLOBAL_CONFIGURATION_INDEX, fontSettingId])
-          .first()
-      )?.value || ValidFontTypes.chilanka;
+  const userFont = FontService.useGetFont();
 
+  useEffect(() => {
     Object.values(ValidFontTypes).forEach((fontClassName) =>
       document.body.classList.remove(fontClassName)
     );
-    document.body.classList.add(fontValue);
-  });
+    document.body.classList.add(userFont);
+  }, [userFont]);
 
   return (
-    <div className="h-screen flex flex-col container mx-auto">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-blue-200 to-red-200 ">
       <RegisterUserModal />
       <Header />
-      <main className="flex flex-1 overflow-y-auto flex-col"></main>
+      <main className="flex flex-1 overflow-y-auto w-full flex-col">
+        <Dashboard />
+      </main>
       <Footer />
     </div>
   );

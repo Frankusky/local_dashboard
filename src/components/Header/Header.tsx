@@ -1,6 +1,5 @@
 import RightSideContent from "@/components/Header/RightSideContent";
-import { db } from "@/lib/database";
-import { useLiveQuery } from "dexie-react-hooks";
+import { WorkspaceService } from "@/services/WorkspaceService/WorkspaceService";
 import { Toolbar } from "primereact/toolbar";
 
 const Header = () => {
@@ -14,11 +13,7 @@ const Header = () => {
   };
 
   const CenterSideContent = () => {
-    const currentWorkspaceName = useLiveQuery(async () => {
-      return (
-        (await db.workspace.where("isActive").equals(1)?.first())?.name || ""
-      );
-    });
+    const currentWorkspaceName = WorkspaceService.useGetCurrentWorkspaceName();
 
     if (!currentWorkspaceName) return null;
 
