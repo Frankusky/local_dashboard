@@ -71,7 +71,7 @@ const Dashboard = () => {
   };
 
   // Manejar el arrastre de tarjetas y columnas
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveCard(null);
     setActiveColumn(null);
@@ -93,7 +93,7 @@ const Dashboard = () => {
         overColumnIndex !== -1 &&
         activeColumnIndex !== overColumnIndex
       ) {
-        DashboardService.moveColumn(
+        await DashboardService.moveColumn(
           arrayMove(columns, activeColumnIndex, overColumnIndex)
         );
       }
@@ -136,15 +136,15 @@ const Dashboard = () => {
         sourceIndex,
         destinationIndex
       );
-      DashboardService.moveCard(newCards);
+      await DashboardService.moveCard(newCards);
     } else {
       // Mover entre columnas diferentes
-      columns.forEach((column) => {
+      columns.forEach(async (column) => {
         if (column.id === destinationColumn.id) {
           sourceCard.columnId = destinationColumn.id as number;
           const newCards = [...column.cards];
           newCards.splice(destinationIndex, 0, sourceCard);
-          DashboardService.moveCardIntoAnotherColumn(newCards);
+          await DashboardService.moveCardIntoAnotherColumn(newCards);
         }
       });
     }

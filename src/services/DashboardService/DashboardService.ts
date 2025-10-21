@@ -179,6 +179,11 @@ export const DashboardService = {
       return db.card.bulkUpdate(sortedPayload);
     });
   },
+  /**
+   * Updates the index and the columnId according the order that the column comes in the array
+   * @param {DashboardCardType[]} newCardOrder Sorted columns
+   * @returns {number} Number of items modified
+   */
   moveCardIntoAnotherColumn: async (newSortedCards: DashboardCardType[]) => {
     return await withDB(async () => {
       const sortedPayload = newSortedCards.map((item, index) => ({
