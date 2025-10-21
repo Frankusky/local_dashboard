@@ -93,7 +93,9 @@ const Dashboard = () => {
         overColumnIndex !== -1 &&
         activeColumnIndex !== overColumnIndex
       ) {
-        setColumns(arrayMove(columns, activeColumnIndex, overColumnIndex));
+        DashboardService.moveColumn(
+          arrayMove(columns, activeColumnIndex, overColumnIndex)
+        );
       }
       return;
     }
@@ -127,41 +129,24 @@ const Dashboard = () => {
 
     if (!destinationColumn) return;
 
+    // Rearrange cards in the same column
     if (sourceColumn.id === destinationColumn.id) {
       const newCards = arrayMove(
         sourceColumn.cards,
         sourceIndex,
         destinationIndex
       );
-      setColumns(
-        columns.map((column) =>
-          column.id === sourceColumn.id
-            ? { ...column, cards: newCards }
-            : column
-        )
-      );
+      DashboardService.moveCard(newCards);
     } else {
       // Mover entre columnas diferentes
-      setColumns(
-        columns.map((column) => {
-          if (column.id === sourceColumn.id) {
-            // Remover de la columna origen
-            return {
-              ...column,
-              cards: column.cards.filter((card) => card.slug !== activeSlug),
-            };
-          } else if (column.id === destinationColumn.id) {
-            // Agregar a la columna destino
-            const newCards = [...column.cards];
-            newCards.splice(destinationIndex, 0, sourceCard);
-            return {
-              ...column,
-              cards: newCards,
-            };
-          }
-          return column;
-        })
-      );
+      columns.forEach((column) => {
+        if (column.id === destinationColumn.id) {
+          sourceCard.columnId = destinationColumn.id as number;
+          const newCards = [...column.cards];
+          newCards.splice(destinationIndex, 0, sourceCard);
+          DashboardService.moveCardIntoAnotherColumn(newCards);
+        }
+      });
     }
   };
 

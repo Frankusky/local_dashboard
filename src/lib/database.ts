@@ -104,7 +104,7 @@ class LocalDashboardDB extends Dexie {
       obj.updatedAt = new Date();
     });
 
-    this.settings.hook("updating", (_, obj) => {
+    this.settings.hook("updating", (_, __, obj) => {
       obj.updatedAt = new Date();
     });
 
@@ -119,7 +119,7 @@ class LocalDashboardDB extends Dexie {
       obj.updatedAt = new Date();
     });
 
-    this.column.hook("updating", (_, obj) => {
+    this.column.hook("updating", (_, __, obj) => {
       obj.updatedAt = new Date();
     });
 
@@ -137,7 +137,7 @@ class LocalDashboardDB extends Dexie {
       obj.updatedAt = new Date();
     });
 
-    this.card.hook("updating", (_, obj) => {
+    this.card.hook("updating", (_, __, obj) => {
       obj.updatedAt = new Date();
     });
 
