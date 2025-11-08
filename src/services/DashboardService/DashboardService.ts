@@ -116,20 +116,18 @@ export const DashboardService = {
     return useLiveQuery(async (): Promise<DashboardColumnType[]> => {
       return withDB(async () => {
         const columns = await DashboardService.getColumns();
-        console.log("test", columns);
-        // const dashboardColumns = await Promise.all(
-        //   columns.map(async (singleColumn) => {
-        //     const cards = await DashboardService.getCards(
-        //       singleColumn.id as number
-        //     );
-        //     return {
-        //       ...singleColumn,
-        //       cards: cards,
-        //     };
-        //   })
-        // );
-        return [];
-        // return dashboardColumns as DashboardColumnType[];
+        const dashboardColumns = await Promise.all(
+          columns.map(async (singleColumn) => {
+            const cards = await DashboardService.getCards(
+              singleColumn.id as number
+            );
+            return {
+              ...singleColumn,
+              cards: cards,
+            };
+          })
+        );
+        return dashboardColumns as DashboardColumnType[];
       });
     });
   },
