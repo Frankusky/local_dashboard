@@ -15,6 +15,9 @@ export const DashboardService = {
   getColumns: async (): Promise<Column[]> =>
     withDB(async () => {
       const activeWorkspace = await WorkspaceService.getActiveWorkspace();
+
+      if (!activeWorkspace) return [];
+
       const dashboardColumns = await db.column
         .where("workspaceId")
         .equals(activeWorkspace?.id as number)
@@ -113,19 +116,20 @@ export const DashboardService = {
     return useLiveQuery(async (): Promise<DashboardColumnType[]> => {
       return withDB(async () => {
         const columns = await DashboardService.getColumns();
-        const dashboardColumns = await Promise.all(
-          columns.map(async (singleColumn) => {
-            const cards = await DashboardService.getCards(
-              singleColumn.id as number
-            );
-            return {
-              ...singleColumn,
-              cards: cards,
-            };
-          })
-        );
-
-        return dashboardColumns as DashboardColumnType[];
+        console.log("test", columns);
+        // const dashboardColumns = await Promise.all(
+        //   columns.map(async (singleColumn) => {
+        //     const cards = await DashboardService.getCards(
+        //       singleColumn.id as number
+        //     );
+        //     return {
+        //       ...singleColumn,
+        //       cards: cards,
+        //     };
+        //   })
+        // );
+        return [];
+        // return dashboardColumns as DashboardColumnType[];
       });
     });
   },
