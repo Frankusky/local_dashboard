@@ -69,5 +69,4 @@ export default defineConfig({
       },
     }),
   ],
-  base: "/local-dashboard/",
 });
